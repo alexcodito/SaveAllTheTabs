@@ -13,6 +13,7 @@ using Microsoft.VisualStudio.PlatformUI;
 using SaveAllTheTabs.Commands;
 using SaveAllTheTabs.Polyfills;
 using Task = System.Threading.Tasks.Task;
+using Microsoft.VisualStudio.Shell;
 
 namespace SaveAllTheTabs
 {
@@ -86,103 +87,104 @@ namespace SaveAllTheTabs
             switch (e.Key)
             {
                 case Key.Enter:
-                {
-                    Package.DocumentManager.RestoreGroup(group);
-                    break;
-                }
+                    {
+                        Package.DocumentManager.RestoreGroup(group);
+                        break;
+                    }
                 case Key.Delete:
-                {
-                    var list = ((ListViewItem)sender).FindAncestor<ListView>();
-
-                    Package.DocumentManager.RemoveGroup(group);
-
-                    // Reset the selection to the new selection, otherwise selection get reset to the first item
-                    if (list?.SelectedItem != null)
                     {
-                        list.GetListViewItem(list.SelectedItem)?.Focus();
+                        var list = ((ListViewItem)sender).FindAncestor<ListView>();
+
+                        Package.DocumentManager.RemoveGroup(group);
+
+                        // Reset the selection to the new selection, otherwise selection get reset to the first item
+                        if (list?.SelectedItem != null)
+                        {
+                            list.GetListViewItem(list.SelectedItem)?.Focus();
+                        }
+                        break;
                     }
-                    break;
-                }
                 case Key.Up:
-                {
-                    if (e.KeyboardDevice.Modifiers != ModifierKeys.Control)
                     {
+                        if (e.KeyboardDevice.Modifiers != ModifierKeys.Control)
+                        {
+                            break;
+                        }
+
+                        e.Handled = true;
+
+                        if (group.IsBuiltIn)
+                        {
+                            break;
+                        }
+
+                        var list = ((ListViewItem)sender).FindAncestor<ListView>();
+
+                        Package.DocumentManager.MoveGroup(group, -1);
+
+                        if (list == null)
+                        {
+                            break;
+                        }
+
+                        // Reset focus to current group, otherwise selection get reset to the first item
+                        var delay = Task.Run(async () => await Task.Delay(TimeSpan.FromMilliseconds(1)));
+                        _ = delay.ContinueWith(t =>
+                        {
+                            list.SelectedItem = group;
+                            list.GetListViewItem(group)?.Focus();
+                        }, TaskScheduler.FromCurrentSynchronizationContext());
                         break;
                     }
-
-                    e.Handled = true;
-
-                    if (group.IsBuiltIn)
-                    {
-                        break;
-                    }
-
-                    var list = ((ListViewItem)sender).FindAncestor<ListView>();
-
-                    Package.DocumentManager.MoveGroup(group, -1);
-
-                    if (list == null)
-                    {
-                        break;
-                    }
-
-                    // Reset focus to current group, otherwise selection get reset to the first item
-                    var delay = Task.Run(async () => await Task.Delay(TimeSpan.FromMilliseconds(1)));
-                    delay.ContinueWith(t =>
-                                       {
-                                           list.SelectedItem = group;
-                                           list.GetListViewItem(group)?.Focus();
-                                       }, TaskScheduler.FromCurrentSynchronizationContext());
-                    break;
-                }
                 case Key.Down:
-                {
-                    if (e.KeyboardDevice.Modifiers != ModifierKeys.Control)
                     {
+                        if (e.KeyboardDevice.Modifiers != ModifierKeys.Control)
+                        {
+                            break;
+                        }
+
+                        e.Handled = true;
+
+                        if (group.IsBuiltIn)
+                        {
+                            break;
+                        }
+
+                        var list = ((ListViewItem)sender).FindAncestor<ListView>();
+
+                        Package.DocumentManager.MoveGroup(group, +1);
+
+                        if (list == null)
+                        {
+                            break;
+                        }
+
+                        // Reset focus to current group, otherwise selection get reset to the first item
+                        var delay = Task.Run(async () => await Task.Delay(TimeSpan.FromMilliseconds(1)));
+                        _ = delay.ContinueWith(t =>
+                        {
+                            list.SelectedItem = group;
+                            list.GetListViewItem(group)?.Focus();
+                        }, TaskScheduler.FromCurrentSynchronizationContext());
                         break;
                     }
-
-                    e.Handled = true;
-
-                    if (group.IsBuiltIn)
-                    {
-                        break;
-                    }
-
-                    var list = ((ListViewItem)sender).FindAncestor<ListView>();
-
-                    Package.DocumentManager.MoveGroup(group, +1);
-
-                    if (list == null)
-                    {
-                        break;
-                    }
-
-                    // Reset focus to current group, otherwise selection get reset to the first item
-                    var delay = Task.Run(async () => await Task.Delay(TimeSpan.FromMilliseconds(1)));
-                    delay.ContinueWith(t =>
-                                       {
-                                           list.SelectedItem = group;
-                                           list.GetListViewItem(group)?.Focus();
-                                       }, TaskScheduler.FromCurrentSynchronizationContext());
-                    break;
-                }
                 default:
-                {
-                    if ((e.Key >= Key.D1 && e.Key <= Key.D9) || (e.Key >= Key.NumPad1 && e.Key <= Key.NumPad9))
                     {
-                        var number = e.Key > Key.NumPad0
-                                         ? e.Key - Key.NumPad0
-                                         : e.Key - Key.D0;
-                        Package.DocumentManager.SetGroupSlot(group, number);
+                        if ((e.Key >= Key.D1 && e.Key <= Key.D9) || (e.Key >= Key.NumPad1 && e.Key <= Key.NumPad9))
+                        {
+                            var number = e.Key > Key.NumPad0
+                                             ? e.Key - Key.NumPad0
+                                             : e.Key - Key.D0;
+                            Package.DocumentManager.SetGroupSlot(group, number);
+                        }
+                        break;
                     }
-                    break;
-                }
             }
         }
 
         private void OnTabsListSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             var list = (sender as ListView);
             if (list == null)
             {
@@ -251,17 +253,17 @@ namespace SaveAllTheTabs
             item.Tag = query.ObserveOnDispatcher()
                             .Repeat()
                             .Subscribe(re =>
-                                       {
-                                           StartEditing(list, item, group,
-                                                        (edit, cancel) =>
-                                                        {
-                                                            var previous = group.EndEditing();
-                                                            if (cancel)
-                                                            {
-                                                                edit.Text = previous;
-                                                            }
-                                                        });
-                                       });
+                            {
+                                StartEditing(list, item, group,
+                                             (edit, cancel) =>
+                                             {
+                                                 var previous = group.EndEditing();
+                                                 if (cancel)
+                                                 {
+                                                     edit.Text = previous;
+                                                 }
+                                             });
+                            });
         }
 
         private static void StartEditing(ListView list, ListViewItem item, DocumentGroup group, Action<TextBox, bool> endEditingFn)
@@ -279,11 +281,11 @@ namespace SaveAllTheTabs
             visibility.Where(ivc => ivc.EventArgs.NewValue as bool? == true)
                       .Take(1)
                       .Subscribe(re =>
-                                 {
-                                     edit.SelectionStart = 0;
-                                     edit.SelectionLength = edit.Text.Length;
-                                     edit.Focus();
-                                 });
+                      {
+                          edit.SelectionStart = 0;
+                          edit.SelectionLength = edit.Text.Length;
+                          edit.Focus();
+                      });
 
             disposables.Add(Observable.FromEventPattern<RoutedEventArgs>(edit, "LostFocus")
                                       .Take(1)
@@ -293,10 +295,10 @@ namespace SaveAllTheTabs
                                       .Where(re => re.EventArgs.Key == Key.Escape || re.EventArgs.Key == Key.Enter)
                                       .Take(1)
                                       .Subscribe(re =>
-                                                 {
-                                                     re.EventArgs.Handled = true;
-                                                     endEditingFn(edit, re.EventArgs.Key == Key.Escape);
-                                                 }));
+                                      {
+                                          re.EventArgs.Handled = true;
+                                          endEditingFn(edit, re.EventArgs.Key == Key.Escape);
+                                      }));
 
             disposables.Add(Observable.FromEventPattern<MouseEventArgs>(list, "MouseLeftButtonDown")
                                       .Take(1)

@@ -95,7 +95,7 @@
 
             <Menu guid="guidSavedTabsWindowToolbarCmdSet" id="SavedTabsWindowToolbar" type="ToolWindowToolbar">
                 <CommandFlag>DefaultDocked</CommandFlag>
-                <CommandFlag>NoToolbarClose</CommandFlag>
+                <!--<CommandFlag>NoToolbarClose</CommandFlag>-->
                 <Strings>
                     <CommandName>Toolbar</CommandName>
                     <ButtonText>Toolbar</ButtonText>

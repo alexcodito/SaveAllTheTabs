@@ -46,7 +46,7 @@ namespace SaveAllTheTabs.Commands
                 commandService.AddCommand(command);
 
                 var index = GetGroupIndex(command);
-                Package.Environment.SetKeyBindings(command, $"Global::Ctrl+D,{index}", $"Text Editor::Ctrl+D,{index}");
+                Package.Environment.SetKeyBindings(command, $"Global::Ctrl+Shift+Alt+{index}", $"Text Editor::Ctrl+Shift+Alt+{index}");
             }
         }
 

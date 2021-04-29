@@ -16,12 +16,12 @@ If you answered yes to any of those questions, then **Save All the Tabs is for y
 
 ### Commands
 
-- **Save Tabs...** `Ctrl+D, Ctrl+S` - saves the current set of opened document tabs
+- **Save Tabs...** `Ctrl+Shift+Alt+D, S` - saves the current set of opened document tabs
 - **Restore Tabs** menu - displays a list of the favorited (1-9) sets of document tabs
-  - `Ctrl+D, 1` through `Ctrl+D, 9` - closes all the opened documents and opens the selected set of document tabs
-- **Stash Tabs** `Ctrl+D, Ctrl+C` - stashes (saves to a well-known name, \<stash\>) the current set of opened documents tabs
-- **Restore Stashed Tabs** `Ctrl+D, Ctrl+Z` or ``Ctrl+D, ` `` - closes all the opened documents and opens the stashed (\<stash\>) set of documents tabs
-- **Saved Tabs Window** `Ctrl+D, Ctrl+W` - opens the Saved Tabs window
+  - `Ctrl+Shift+Alt+D, 1` through `Ctrl+Shift+Alt+D, 9` - closes all the opened documents and opens the selected set of document tabs
+- **Stash Tabs** `Ctrl+Shift+Alt+D, C` - stashes (saves to a well-known name, \<stash\>) the current set of opened documents tabs
+- **Restore Stashed Tabs** `Ctrl+Shift+Alt+D, Z` or ``Ctrl+Shift+Alt+D, ` `` - closes all the opened documents and opens the stashed (\<stash\>) set of documents tabs
+- **Saved Tabs Window** `Ctrl+Shift+Alt+D, W` - opens the Saved Tabs window
 
 ### Saved Tabs Window
 
@@ -42,6 +42,6 @@ Open the Saved Tabs window to quickly and easily manage your sets of saved docum
 
 - `Enter` - closes all the opened documents and opens the set of saved document tabs
 - `1` through `9` - assigns a favorite number to the selected tab set
-- `Ctrl+UpArrow` - moves the selected tab set up
-- `Ctrl+DownArrow` - moves the selected tab set down
+- `Ctrl+Shift+Alt+UpArrow` - moves the selected tab set up
+- `Ctrl+Shift+Alt+DownArrow` - moves the selected tab set down
 - `Delete` - deletes the selected tab set

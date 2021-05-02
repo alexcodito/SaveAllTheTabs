@@ -263,23 +263,41 @@ namespace SaveAllTheTabs
 
         public void OpenGroup(DocumentGroup group)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (group == null)
             {
                 return;
             }
 
-            using (var stream = new VsOleStream())
+            if (group.Positions != null)
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
-                stream.Write(group.Positions, 0, group.Positions.Length);
-                stream.Seek(0, SeekOrigin.Begin);
-
-                var hr = DocumentWindowMgr.ReopenDocumentWindows(stream);
-                if (hr != VSConstants.S_OK)
+                using (var stream = new VsOleStream())
                 {
-                    Debug.Assert(false, "ReopenDocumentWindows", String.Empty, hr);
+                    stream.Write(group.Positions, 0, group.Positions.Length);
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    var hr = DocumentWindowMgr.ReopenDocumentWindows(stream);
+                    if (hr != VSConstants.S_OK)
+                    {
+                        Debug.Assert(false, "ReopenDocumentWindows", String.Empty, hr);
+                    }
                 }
             }
+
+            var openFiles = Package.Environment.GetDocumentFiles();
+            foreach (var file in group.Files)
+            {
+                if (!openFiles.Any(f => string.Compare(f, file, true) == 0))
+                {
+                    OpenFile(file);
+                }
+            }
+        }
+
+        public void OpenFile(string path)
+        {
+            VsShellUtilities.OpenDocument(ServiceProvider, path);
         }
 
         public void CloseGroup(DocumentGroup group)

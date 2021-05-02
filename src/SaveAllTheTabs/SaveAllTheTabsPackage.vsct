@@ -369,7 +369,7 @@
       </Button>
 
       <Button guid="guidSavedTabsWindowToolbarCmdSet" id="SavedTabsWindowToolbarDeleteTabs" priority="0x0100" type="Button">
-        <Parent guid="guidSavedTabsWindowToolbarCmdSet" id="SavedTabsWindowToolbarCmdGroup2" />
+        <Parent guid="guidSavedTabsWindowToolbarCmdSet" id="SavedTabsWindowToolbarCmdGroup3" />
         <Icon guid="guidImages" id="bmpPicDelete" />
         <CommandFlag>DefaultDisabled</CommandFlag>
         <Strings>
@@ -382,23 +382,27 @@
       </Button>
 
       <Button guid="guidSavedTabsWindowToolbarCmdSet" id="SavedTabsWindowToolbarExportGroups" priority="0x0100" type="Button">
-        <Parent guid="guidSavedTabsWindowToolbarCmdSet" id="SavedTabsWindowToolbarCmdGroup3" />
+        <Parent guid="guidSavedTabsWindowToolbarCmdSet" id="SavedTabsWindowToolbarCmdGroup2" />
+        <Icon guid="guidImages" id="bmpPicJsonExport" />
         <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconAndText</CommandFlag>
         <Strings>
-          <CommandName>Export groups</CommandName>
+          <CommandName>Export</CommandName>
           <ButtonText>Export</ButtonText>
-          <MenuText>Export groups</MenuText>
+          <MenuText>Export</MenuText>
           <CanonicalName>SaveAllTheTabs.ToolbarExportGroups</CanonicalName>
           <LocCanonicalName>SaveAllTheTabs.ToolbarExportGroups</LocCanonicalName>
         </Strings>
       </Button>
 
       <Button guid="guidSavedTabsWindowToolbarCmdSet" id="SavedTabsWindowToolbarImportGroups" priority="0x0200" type="Button">
-        <Parent guid="guidSavedTabsWindowToolbarCmdSet" id="SavedTabsWindowToolbarCmdGroup3" />
+        <Parent guid="guidSavedTabsWindowToolbarCmdSet" id="SavedTabsWindowToolbarCmdGroup2" />
+        <Icon guid="guidImages" id="bmpPicJsonImport" />
+        <CommandFlag>IconAndText</CommandFlag>
         <Strings>
-          <CommandName>Import groups</CommandName>
+          <CommandName>Import</CommandName>
           <ButtonText>Import</ButtonText>
-          <MenuText>Import groups</MenuText>
+          <MenuText>Import</MenuText>
           <CanonicalName>SaveAllTheTabs.ToolbarImportGroups</CanonicalName>
           <LocCanonicalName>SaveAllTheTabs.ToolbarImportGroups</LocCanonicalName>
         </Strings>
@@ -415,7 +419,8 @@
       <Bitmap guid="guidImages" href="Resources\SavedTabsToolWindowCommands.png" usedList="bmpPicTabSave, bmpPicOpenArrow, bmpPicRefresh, bmpPicDelete,
                                                                                                  bmpPicTabHash, bmpPicTabDownArrow, bmpPicTabClose, bmpPicTabOpenArrow,
                                                                                                  bmpPicTabSync, bmpPicTabUpArrow, bmpPicSave, bmpPicTabAdd, bmpPicTabRefresh,
-                                                                                                 bmpPicTabCloseBW, bmpPicTabOpenArrowBW, bmpPicTabSyncBW" />
+                                                                                                 bmpPicTabCloseBW, bmpPicTabOpenArrowBW, bmpPicTabSyncBW, bmpPicJsonExport,
+                                                                                                 bmpPicJsonImport" />
     </Bitmaps>
   </Commands>
 
@@ -439,6 +444,9 @@
       <Parent guid="guidSavedTabsWindowContextMenuCmdSet" id="SavedTabsWindowContextMenuCmdGroup1"/>
     </CommandPlacement>
     <CommandPlacement guid="guidSavedTabsWindowToolbarCmdSet" id="SavedTabsWindowToolbarSaveToTabs" priority="0x0100">
+      <Parent guid="guidSavedTabsWindowContextMenuCmdSet" id="SavedTabsWindowContextMenuCmdGroup2"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidSavedTabsWindowToolbarCmdSet" id="SavedTabsWindowToolbarExportGroups" priority="0x0200">
       <Parent guid="guidSavedTabsWindowContextMenuCmdSet" id="SavedTabsWindowContextMenuCmdGroup2"/>
     </CommandPlacement>
     <CommandPlacement guid="guidSavedTabsWindowToolbarCmdSet" id="SavedTabsWindowToolbarDeleteTabs" priority="0x0500">
@@ -542,6 +550,8 @@
       <IDSymbol name="bmpPicTabCloseBW" value="14" />
       <IDSymbol name="bmpPicTabOpenArrowBW" value="15" />
       <IDSymbol name="bmpPicTabSyncBW" value="16" />
+      <IDSymbol name="bmpPicJsonExport" value="17" />
+      <IDSymbol name="bmpPicJsonImport" value="18" />
     </GuidSymbol>
   </Symbols>
 </CommandTable>

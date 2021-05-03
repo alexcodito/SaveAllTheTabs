@@ -452,6 +452,8 @@ namespace SaveAllTheTabs
 
         public void ExportGroups(string filePath)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var export = new ExportData
             {
                 SolutionName = SolutionName,
@@ -463,6 +465,8 @@ namespace SaveAllTheTabs
 
         public void ImportGroups(string filePath)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var json = File.ReadAllText(filePath);
             var import = JsonConvert.DeserializeObject<ExportData>(json);
             if (SolutionName != import.SolutionName)
@@ -596,7 +600,7 @@ namespace SaveAllTheTabs
 
             if (store.CollectionExists(projectGroupsKey))
             {
-                store.DeleteProperty(StorageCollectionPath, projectGroupsKey);
+                store.DeleteCollection(projectGroupsKey);
             }
             store.CreateCollection(projectGroupsKey);
 
